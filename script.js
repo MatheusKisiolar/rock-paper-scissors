@@ -34,15 +34,15 @@ function playRound(e) {
     const computerSelection = getComputerChoice();
     
     if (playerSelection === computerSelection) {
-        loadGameScore("The round is a tie!")
+        loadGameScore(`Computer chooses ${computerSelection}. Tie!`);
         loadLastRound()
     } else if (playerSelection === 'paper' && computerSelection === "rock" || playerSelection === 'rock' && computerSelection === 'scissors' || playerSelection === 'scissors' && computerSelection === 'paper') {
         playerScore++;
-        loadGameScore(`${firstToUpperCase(playerSelection)} beats ${computerSelection}! Player wins the round!`)
+        loadGameScore(`Computer chooses ${computerSelection}. You win the round!`);
         loadLastRound()
     } else {
         computerScore++;
-        loadGameScore(`${firstToUpperCase(computerSelection)} beats ${playerSelection}! Computer wins the round!`)
+        loadGameScore(`Computer chooses ${computerSelection}. You lose the round!`);
         loadLastRound()
     }
 
@@ -67,13 +67,13 @@ function playLastRound(e) {
     const computerSelection = getComputerChoice();
     
     if (playerSelection === computerSelection) {
-        loadFinalResult("The round is a tie!");
+        loadFinalResult(`Computer chooses ${computerSelection}. Tie!`);
     } else if (playerSelection === 'paper' && computerSelection === "rock" || playerSelection === 'rock' && computerSelection === 'scissors' || playerSelection === 'scissors' && computerSelection === 'paper') {
         playerScore++;
-        loadFinalResult(`${firstToUpperCase(playerSelection)} beats ${computerSelection}! Player wins the round!`);
+        loadFinalResult(`Computer chooses ${computerSelection}. You win the round!`);
     } else {
         computerScore++;
-        loadFinalResult(`${firstToUpperCase(computerSelection)} beats ${playerSelection}! Computer wins the round!`);
+        loadFinalResult(`Computer chooses ${computerSelection}. You lose the round!`);
     }
 
     gameButtons.forEach(button => button.removeEventListener("click", playLastRound));
@@ -81,14 +81,20 @@ function playLastRound(e) {
 
 function startGame() {
     if (rounds > 0) return;
-
+    
     rounds = +prompt("How many rounds do you want to play? (3 minimum)");
-    selectedRounds = rounds;
    
     if (rounds <= 2) {
         alert("Game canceled.")
         return;
     }
+    
+    selectedRounds = rounds;
+   
+    startGameButton.style.display = "none";
+    buttonsDiv.style.display = "block";
+
+    
 
     currentRound = 1;
     playerScore = 0;
@@ -128,6 +134,10 @@ function loadGameScore(roundResult) {
 }
 
 function loadFinalResult(roundResult){
+    buttonsDiv.style.display = "none";
+    startGameButton.textContent = "Start new game";
+    startGameButton.style.display = "inline";
+
     if (computerScore > playerScore) {
         document.querySelector("#game-info").innerHTML = `
             <p>${roundResult}</p>
@@ -151,10 +161,4 @@ function loadFinalResult(roundResult){
         `;
     }
 
-}
-
-function firstToUpperCase(string) {
-    const array = Array.from(string);
-    array[0] = array[0].toUpperCase();
-    return array.join("");
 }
